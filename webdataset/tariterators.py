@@ -104,9 +104,12 @@ def tar_file_iterator(
                 continue
             if skip_meta is not None and re.match(skip_meta, fname):
                 continue
-            data = stream.extractfile(tarinfo).read()
-            result = dict(fname=fname, data=data)
-            yield result
+            try:
+                data = stream.extractfile(tarinfo).read()
+                result = dict(fname=fname, data=data)
+                yield result
+            except:
+                continue
             stream.members = []
         except Exception as exn:
             if hasattr(exn, "args") and len(exn.args) > 0:
