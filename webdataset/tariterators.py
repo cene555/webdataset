@@ -108,7 +108,8 @@ def tar_file_iterator(
                 data = stream.extractfile(tarinfo).read()
                 result = dict(fname=fname, data=data)
                 yield result
-            except:
+            except Exception as exn:
+                print(exn)
                 continue
             stream.members = []
         except Exception as exn:
