@@ -133,18 +133,18 @@ def tar_file_expander(data, handler=reraise_exception):
             assert isinstance(source, dict)
             assert "stream" in source
             for sample in tar_file_iterator(source["stream"]):
-                assert (
-                    isinstance(sample, dict) and "data" in sample and "fname" in sample
-                )
-                sample["__url__"] = url
-                yield sample
+                try:
+                    assert (
+                        isinstance(sample, dict) and "data" in sample and "fname" in sample
+                    )
+                    sample["__url__"] = url
+                    yield sample
+                except Exception as exn:
+                    print(exn)
+                    continue
         except Exception as exn:
-            exn.args = exn.args + (source.get("stream"), source.get("url"))
-            if handler(exn):
-                continue
-            else:
-                break
-
+            #exn.args = exn.args + (source.get("stream"), source.get("url"))
+            continue
 
 def group_by_keys(data, keys=base_plus_ext, lcase=True, suffixes=None, handler=None):
     """Return function over iterator that groups key, value pairs into samples.
